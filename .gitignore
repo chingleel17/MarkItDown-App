@@ -1,0 +1,17 @@
+# 虛擬環境
+.venv/
+
+# PyInstaller 產生的目錄
+build/
+dist/
+*.spec.bak
+
+# Python 暫存
+__pycache__/
+*.py[cod]
+*.pyo
+
+# 系統檔
+.DS_Store
+Thumbs.db
+desktop.ini
