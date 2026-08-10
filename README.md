@@ -17,6 +17,7 @@ A GUI batch converter that converts various file formats to Markdown using [Micr
 ## Features
 
 - Batch convert multiple files at once
+- Drag and drop files directly into the conversion list
 - Supported formats: PDF, Word, PowerPoint, Excel, HTML, Images, ZIP, EPUB, and more
 - **URL conversion**: Enter any URL to fetch and convert web pages to Markdown
 - Custom output directory (defaults to same folder as source file)
@@ -33,6 +34,8 @@ A GUI batch converter that converts various file formats to Markdown using [Micr
 Download the `dist/MarkItDownApp/` folder and run `MarkItDownApp.exe` directly.
 
 ### Developers
+
+This project uses uv to manage Python 3.12 and package versions. Install [uv](https://docs.astral.sh/uv/getting-started/installation/) first. The project uses a separate `.venv312` environment and does not overwrite other `.venv` environments.
 
 **First-time setup:**
 
@@ -57,7 +60,7 @@ After building, distribute the entire `dist/MarkItDownApp/` folder.
 ## Requirements
 
 - OS: Windows 10 / 11 (64-bit)
-- Python: 3.10+ (only required for development mode)
+- Python: 3.12 (managed by uv; only required for development mode)
 
 ## Project Structure
 

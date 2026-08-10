@@ -17,6 +17,7 @@
 ## 功能
 
 - 一次選取多個檔案進行轉換
+- 支援將檔案直接拖放至轉換列表
 - 支援格式：PDF、Word、PowerPoint、Excel、HTML、圖片、ZIP、EPUB 等
 - **URL 直接轉換**：輸入網址即可抓取頁面並轉為 Markdown
 - 自訂輸出目錄（預設與原始檔案相同位置）
@@ -33,6 +34,8 @@
 下載 `dist/MarkItDownApp/` 資料夾，直接執行 `MarkItDownApp.exe`。
 
 ### 開發者
+
+本專案使用 uv 管理 Python 3.12 與套件版本。請先安裝 [uv](https://docs.astral.sh/uv/getting-started/installation/)。專案會使用獨立的 `.venv312`，不會覆寫其他 `.venv` 環境。
 
 **首次設定：**
 
@@ -57,7 +60,7 @@ build.bat
 ## 系統需求
 
 - 作業系統：Windows 10 / 11（64 位元）
-- Python：3.10 以上（僅開發模式需要）
+- Python：3.12（由 uv 管理，僅開發模式需要）
 
 ## 專案結構
 
@@ -66,6 +69,9 @@ MarkItDown App/
 ├── app.py              # 主程式
 ├── app.spec            # PyInstaller 打包設定
 ├── requirements.txt    # Python 依賴清單
+├── pyproject.toml      # uv 專案與依賴設定
+├── uv.lock             # uv 鎖定的依賴版本
+├── .python-version     # Python 版本鎖定為 3.12
 ├── setup.bat           # 首次環境設定
 ├── run.bat             # 開發模式啟動
 ├── build.bat           # 打包為 exe

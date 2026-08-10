@@ -24,6 +24,13 @@ datas += tmp[0]
 binaries += tmp[1]
 hiddenimports += tmp[2]
 
+# NumPy：Magika 會間接載入 NumPy 的原生 C 擴充模組
+hiddenimports += [
+    "numpy._core._multiarray_umath",
+    "numpy._core._multiarray_tests",
+    "numpy._core.multiarray",
+]
+
 # Magika：markitdown 用來偵測檔案類型，含 ML 模型資料
 tmp = collect_all("magika")
 datas += tmp[0]
@@ -79,7 +86,7 @@ a = Analysis(
     binaries=binaries,
     datas=datas,
     hiddenimports=hiddenimports,
-    hookspath=[],
+    hookspath=["."],
     hooksconfig={},
     runtime_hooks=[],
     excludes=[

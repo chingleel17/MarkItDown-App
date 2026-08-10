@@ -9,6 +9,7 @@ import urllib.parse
 import urllib.request
 import customtkinter as ctk
 from tkinter import filedialog, messagebox
+from tkinterdnd2 import COPY, DND_FILES, TkinterDnD
 from pathlib import Path
 from markitdown import MarkItDown
 
@@ -635,6 +636,7 @@ class MarkItDownApp(ctk.CTk):
 
     def __init__(self):
         super().__init__()
+        TkinterDnD.require(self)
         self.title(self.APP_TITLE)
         self.geometry("980x660")
         self.minsize(720, 500)
@@ -914,11 +916,19 @@ class MarkItDownApp(ctk.CTk):
 
         self._empty_label = ctk.CTkLabel(
             self._scrollable,
-            text="尚未新增任何檔案或網址\n請點選「＋ 新增檔案」或「🌐 新增網址」",
+            text="尚未新增任何檔案或網址\n請點選「＋ 新增檔案」或「🌐 新增網址」，或將檔案拖放至此處",
             text_color="#9ca3af",
             font=ctk.CTkFont(size=13),
         )
         self._empty_label.pack(pady=60)
+        self._register_drop_targets(container)
+
+    def _register_drop_targets(self, widget) -> None:
+        """將列表容器及其子元件註冊為檔案拖放目標。"""
+        widget.drop_target_register(DND_FILES)
+        widget.dnd_bind("<<Drop>>", self._on_files_dropped)
+        for child in widget.winfo_children():
+            self._register_drop_targets(child)
 
     def _build_bottom_bar(self) -> None:
         bar = ctk.CTkFrame(self, height=58, corner_radius=0, fg_color="#f8fafc")
@@ -974,13 +984,29 @@ class MarkItDownApp(ctk.CTk):
         )
         if not paths:
             return
+        self._add_file_paths(paths)
+
+    def _on_files_dropped(self, event):
+        paths = self.tk.splitlist(event.data)
+        self._add_file_paths(paths)
+        return COPY
+
+    def _add_file_paths(self, paths) -> None:
+        file_paths = []
+        for raw_path in paths:
+            path = Path(raw_path).resolve()
+            if path.is_file():
+                file_paths.append(path)
+
+        if not file_paths:
+            return
         if self._empty_label.winfo_ismapped():
             self._empty_label.pack_forget()
-        for p in paths:
-            p_path = Path(p).resolve()
-            if not any(isinstance(r, FileRow) and r.path == p_path for r in self._file_rows):
-                row = FileRow(self._scrollable, p_path, self._remove_file_row)
+        for path in file_paths:
+            if not any(isinstance(r, FileRow) and r.path == path for r in self._file_rows):
+                row = FileRow(self._scrollable, path, self._remove_file_row)
                 self._file_rows.append(row)
+                self._register_drop_targets(row.frame)
 
     def _add_urls(self) -> None:
         dialog = URLInputDialog(self)
@@ -993,6 +1019,7 @@ class MarkItDownApp(ctk.CTk):
             if not any(isinstance(r, URLRow) and r.url == url for r in self._file_rows):
                 row = URLRow(self._scrollable, url, self._remove_file_row)
                 self._file_rows.append(row)
+                self._register_drop_targets(row.frame)
 
     def _remove_file_row(self, row: "FileRow | URLRow") -> None:
         if self._converting:
